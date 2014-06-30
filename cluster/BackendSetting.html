@@ -1,0 +1,284 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html" charset="zh_TW.UTF-8" />
+<title>PC Cluster Configuration</title>
+<link rel="stylesheet" href="../HTML/defaults.css" type="text/css">
+</head>
+<body>
+
+
+
+<!--head line-->
+<h1>PC Cluster configuration</h1>
+<a href="#sshd"><li class="title">sshd config for backend</li></a>
+<br /><a href="#ssh"><li class="title">ssh config for backend</li></a>
+<br /><a href="#DNS_back"><li class="title">DNS config for backend</li></a>
+<br /><a href="#DNS_front"><li class="title">DNS config for frontend (for k0 only)</li></a>
+<br /><a href="#NFS"><li class="title">NFS&NIS client</li></a>
+<br /><a href="#rpm"><li class="title">rpm package install</li></a>
+<br /><a href="#pdsh"><li class="title">pdsh install</li></a>
+<br /><a href="#torque_back"><li class="title">torque install for backend</li></a>
+<br /><a href="#torque_front"><li class="title">torque install for frontend (for k0 only)</li></a>
+<br /><a href="#chamgelog"><li class="title">changelog</li></a>
+<br /><a href="#"><li class="title"></li></a>
+<hr />
+
+
+
+<!--sshd-->
+<a name="sshd"><h2>sshd config for backend</h2>
+<div class="commands">
+	Client:~ # <span class="cmds">vi</span> /etc/ssh/sshd_config
+	<br />RhostsRSAAuthentication yes
+	<span class="cmts">#Use RSA authentication</span>
+	<br />HostbasedAuthentication yes
+	<span class="cmts">#Use hostbased authentication</span>
+	<br />IgnoreUserKnownHosts yes
+	<span class="cmts">#Do not use users host</span>
+	<br />IgnoreRhosts yes
+	<span class="cmts">#Do not use users rhost</span>
+</div>
+<br />
+<div class="commands">
+	Client:~ # <span class="cmds">vi</span> /etc/hosts.equiv
+	<span class="cmts">#this file should changed for all backends</span>
+	<br />i01
+	<br />i02
+	<br />...
+	<br />i25
+</div>
+<br />
+<div class="commands">
+	Client:~ # <span class="cmds">ssh-keyscan</span>
+	-trsa <span class="vars">client</span> >> /etc/ssh/ssh_known_hosts
+	<br />client:~ # <span class="cmds">cat</span> /etc/ssh/ssh_known_hosts
+	<span class="cmts">#this file should changed for all backends</span>
+	<br />i01 ssh-rsa AAAAB3NzaC1yc2......
+	<br />i02 ssh-rsa AAAAB3NzaC1yc2......
+	<br />...
+	<br />i25 ssh-rsa AAAAB3NzaC1yc2......
+</div>
+<hr />
+
+
+
+<!--ssh-->
+<a name="ssh"><h2>ssh config for backend</h2>
+<div class="commands">
+	Client:~ # <span class="cmds">vi</span> /etc/ssh/ssh_config
+	<br />RhostsRSAAuthentication yes
+	<span class="cmts">#Use RSA authentication</span>
+	<br />HostbasedAuthentication yes
+	<span class="cmts">#Use hostbased authentication</span>
+	<br />StrictHostKeyChecking no
+	<br />EnableSSHKeysign yes
+</div>
+<br />
+
+<div class="commands">
+	Client:~ # <span class="cmds">chmod u+s</span> /usr/lib64/ssh/ssh-keysign
+</div>
+<br />
+
+<div class="commands">
+	<span class="cmts">#copy the id_rsa.pub from k0 to the authorized_keys in the backend</span>
+	<br />k0:~ # <span class="cmds">cat</span> .ssh/id_rsa.pub
+	<br />Client:~ # <span class="cmds">mkdir</span> .ssh
+	<br />Client:~ # <span class="cmds">cd</span> .ssh
+	<br />Client:~ # <span class="cmds">vi</span> authorized_keys
+</div>
+<hr />
+
+
+<!--DNS client-->
+<a name="DNS_back"><h2>DNS config for backend</h2>
+<p class="h2">DNS= Domain Name Server</p>
+<div class="commands">
+	Client:~ # <span class="cmds">vi</span> /etc/resolve.conf
+	<br />domain site
+	<br />nameserver 192.168.0.1
+</div>
+<hr />
+
+
+
+<!--DNS server-->
+<a name="DNS_front"><h2>DNS config for frontend (for k0 only)</h2>
+<p class="h2">
+	DNS forward: hostname-> IP
+	<br />DNS reverse: IP -> hostname
+</p>
+<div class="commands">
+	k0:~ # <span class="cmds">cd</span> /var/lib/named/master
+	<br />k0:/var/lib/named/master # 
+	<span class="cmds">ls</span>
+	<br />0.168.192.in-addr.arpa
+	<span class="cmts">#this file is DNS reverse</span>
+	<br />site
+	<span class="cmts">#this file is DNS forward</span>
+</div><br />
+	
+
+<div class="commands">	
+	k0:/var/lib/named/master # 
+	<span class="cmds">vi</span>  0.168.192.in-addr.arpa
+	<br />101.0.168.192.in-addr.arpa.     IN PTR          i01.site.
+	<br />102.0.168.192.in-addr.arpa.     IN PTR          i02.site.
+	<br />...
+	<br />131.0.168.192.in-addr.arpa.     IN PTR          e06.site.
+</div><br />
+
+
+<div class="commands">
+	k0:/var/lib/named/master # 
+	<span class="cmds">vi</span>  site
+	<br />i01             IN A            192.168.0.101
+	<br />i02             IN A            192.168.0.102
+	<br />...
+	<br />e06             IN A            192.168.0.131
+	<br />k0:~ # /etc/init.d/named <span class="cmds">restart</span> 
+	<span class="cmts">#restart the DNS server</span>
+</div>
+<hr />
+
+
+
+<!--NFS nd NIS-->
+<a name="NFS"><h2>NFS&NIS client</h2>
+<p class="h2">NFS= Network File System</p>
+<div class="commands">
+	Client:~ # <span class="cmds">yast</span>
+</div>
+<br /><p class="h2">Network Services -> NFS Client</p>
+<img src="pic/nfs_client.png" /><br />
+<br /><p class="h2">Network Services -> NIS Client</p>
+<br />
+<img src="pic/nis_client.png" /><br />
+<div class="commands">
+	<span class="cmts">#nfs & nis restart</span>
+	<br />Client:~ # /etc/init.d/nfs <span class="cmds">restart</span>
+	<br />Client:~ # /etc/init.d/ypbind <span class="cmds">restart</span>
+</div><br />
+
+<div class="commands">
+	Client:~ # <span class="cmds">df</span> -h
+	<span class="cmts">#Check the partition and the NFS mount</span>
+	<br />
+	<br />Filesystem      Size  Used Avail Use% Mounted on
+	<br />/dev/sda3        30G  762M   28G   3% /
+	<br />udev             24G  188K   24G   1% /dev
+	<br />tmpfs            24G     0   24G   0% /dev/shm
+	<br />/dev/sda1       493M   44M  425M  10% /boot
+	<br />/dev/sda6       512G   12G  498G   3% /tmp
+	<br />/dev/sda5        30G  5.0G   24G  18% /usr
+	<br />fs1:/home       3.7T  165G  3.4T   5% /home
+	<br />fs2:/work       137G  126G  6.0G  96% /work
+</div>
+<hr />
+
+
+<!--rpm-->
+<a name="rpm"><h2>rpm package install for backend</h2>
+<div class="commands">
+	Client:~ # <span class="cmds">cd</span> /home/pkg/rpm
+	<span class="cmts">#every package u need can be found here!</span>
+</div>
+<br /><p class="h2">rpm arguments</p>
+<div class="commands">
+	<br />Client:~ # <span class="cmds">rpm</span> -ivh pkg.rpm
+	<span class="cmts">#Install pkg.rpm</span>
+	<br />Client:~ # <span class="cmds">rpm</span> -e pkg.rpm
+	<span class="cmts">#Remove pkg.rpm</span>
+	<br />
+	<br /><span class="cmts">#Searching</span>
+	<br />Client:~ # <span class="cmds">rpm</span> -qa
+	<br />Client:~ # <span class="cmds">rpm</span> -ql pkg
+	<br />Client:~ # <span class="cmds">rpm</span> -qf path
+</div>
+<hr />
+
+
+
+<!--pdsh-->
+<a name="pdsh"><h2>pdsh install for backend</h2>
+<p class="h2">pdsh is a powerful tool that u can make a command in the frontend and let all the backend run this commands</p>
+<div class="commands">
+	Client:~ # <span class="cmds">cd</span> /home/pkg/rpm
+	<br />Client:/home/pkg/rpm # <span class="cmds">rpm</span> -ivh  pdsh-rcmd-ssh-2.26-1.x86_64.rpm
+	<br />Client:/home/pkg/rpm # <span class="cmds">rpm</span> -ivh  pdsh-2.26-1.x86_64.rpm
+</div>
+<br />
+
+<div class="commands">
+<span class="cmts">#conf. file in k0</span>
+	k0:~ # <span class="cmds">vi</span> /etc/machines
+	<br />i01
+	<br />i02
+	<br />...
+	<br />e06
+</div>
+<br /><p class="h2">pdsh arguments</p>
+<div class="commands">
+	k0:~ # <span class="cmds">pdsh</span> -a <span class="vars">cmd</span>
+	<span class="cmts">#all the backends run cmd command</span>
+	<br />k0:~ # <span class="cmds">pdsh</span> -w <span class="vars">host</span> 
+	<span class="vars">cmd</span>
+	<span class="cmts">#only designated hosts run cmd command</span>
+</div>
+<hr />
+
+
+
+<!--torque_back-->
+<a name="torque_back"><h2>torque install for backend</h2>
+<div class="commands">
+	Client:~ # <span class="cmds">cd</span> /home/pkg/rpm/torque-4.2.0
+	<br /><span class="cmts">#theese three pkgs r required for the backend</span>
+	<br />Client:/home/pkg/rpm/torque-4.2.0 # 
+	<span class="cmds">rpm</span> -ivh torque-4.2.0-1.cri.x86_64.rpm
+	<br />Client:/home/pkg/rpm/torque-4.2.0 # 
+	<span class="cmds">rpm</span> -ivh torque-client-4.2.0-1.cri.x86_64.rpm
+	<br />Client:/home/pkg/rpm/torque-4.2.0 # 
+	<span class="cmds">rpm</span> -ivh torque-devel-4.2.0-1.cri.x86_64.rpm
+	<br />
+
+
+
+	<br /><span class="cmts">#torque conf for backend</span>
+	<br />Client:~ # <span class="cmds">vi</span> /var/spool/torque/server_name
+	<br />k0.site
+	<br />
+	<br />Client:~ # <span class="cmds">vi</span> /var/spool/torque/mom_priv/config
+	<br />$pbsserver k0.site
+	<br />
+	<br />Client:~ # /etc/init.d/pbs_mom restart
+	<span class="cmts">#restart the service</span>
+</div>
+<hr />
+
+
+
+<!--torque_front-->
+<a name="torque_front"><h2>torque install for frontend (for k0 only)</h2>
+<div class="commands">
+	k0:~ # <span class-"cmds">vi</span> /var/spool/torque/server_priv/nodes
+	<span class="cmts">#The configuration file</span>
+	<br />i01  np=8 workq
+	<br />i02  np=8 workq
+	<br />...
+	<br />i25  np=8 workq
+	<br />...
+	<br />e07  np=16 xeonq
+	<br />k0:~ # /etc/init.d/pbs_server <span class="cmds">restart</span>
+	<span class="cmts">#restart the services</span>
+</div>
+<hr />
+
+
+<!--change log-->
+<a name="chamgelog"><h2>Changelog</h2>
+    <li class="changelog">2014/02/24 第一次完成</li>
+    <li class="changrlog">2014/03/03 補充並修改</li>
+</body>
+</html>

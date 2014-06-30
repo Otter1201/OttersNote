@@ -1,0 +1,353 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+<meta http-equiv="Content-Type" content="text/html" charset="zh_TW.UTF-8">
+<title>Python Library</title>
+<link rel="stylesheet" href="../../../defaults.css" type="text/css">
+</head><body>
+
+<!-- header -->
+      <h1>Python Library</h1>
+
+      <br /><a href="#IDE"><li class="title">IDE</li></a>
+        <br /><a href="#ipython"><li class="subtitle">ipython</li>
+      
+      <br /><a href="#SSH"><li class="title">SSH</li></a>
+        <br /><a href="#paramiko"><li class="subtitle">paramiko</li>
+
+      <br /><a href="#NumSci"><li class="title">Num &amp; Sci</li></a>
+        <br /><a href="#NumPy"><li class="subtitle">NumPy</li>
+        <br /><a href="#matplotlib"><li class="subtitle">matplotlib</li>
+        <br /><a href="#SciPy"><li class="subtitle">SciPy</li>
+
+      <br /><a href="#GUI"><li class="title">GUI</li></a>
+        <br /><a href="#wxPython"><li class="subtitle">wxPython</li>
+
+      <br /><a href="#Package"><li class="title">Package Management</li></a>
+        <br /><a href="#distutils"><li class="subtitle">distutils</li>
+        <br /><a href="#setuptool"><li class="subtitle">setuptool</li>
+        <br /><a href="#pip"><li class="subtitle">pip</li>
+
+      <br /><a href="#Testing"><li class="title">Testing tool</li></a>
+        <br /><a href="#selenium"><li class="subtitle">Selenium</li>
+        <br /><a href="#virtualenv"><li class="subtitle">virtualenv</li></a>
+
+      <hr />
+
+<!-- IDE -->
+      <a name="IDE"></a><h2>IDE</h2>
+
+      <a name="ipython"></a><h3>ipython</h3>
+      <div class="commands"><span class="cmts">#安裝ipython</span>
+      <br /><span class="cmts">#使用distUtils安裝</span>
+      <br />Linux:~ # <span class="cmds">wget</span> <span class="vars">http://archive.ipython.org/release/0.10.1/ipython-0.10.1.tar.gz</span>
+      <br />Linux:~ # <span class="cmds">tar</span> <span class="vars">ipyton-0.10.1.tar.gz</span>
+      <br />Linux:~ # <span class="cmds">cd</span> ipython-0.10.1
+      <br />Linux:~/ipython-0.10.1 # <span class="cmds">python</span> setup.py build
+      <br />Linux:~/ipython-0.10.1 # <span class="cmds">python</span> setup.py install
+      <br />
+
+      <br /><span class="cmts">#使用pip安裝</span>
+      <br />Linux:~ # <span class="cmds">pip</span> install <span class="vars">ipython</span>
+      </div>
+      <br />
+
+      <h3>ipython helpful command</h3>
+      <table class="h3">
+      <colgroup>
+      <col width="15%">
+      <col width="85%">
+      </colgroup>
+      <thead valign="bottom">
+      <tr class="row-odd"><th class="head">command</th>
+      <th class="head">description</th>
+      </tr>
+      </thead>
+      <tbody valign="top">
+      <tr class="row-even"><td>?</td>
+      <td>Introduction and overview of IPython’s features.</td>
+      </tr>
+      <tr class="row-odd"><td>%quickref</td>
+      <td>Quick reference.</td>
+      </tr>
+      <tr class="row-even"><td>help</td>
+      <td>Python’s own help system.</td>
+      </tr>
+      <tr class="row-odd"><td>object?</td>
+      <td>Details about ‘object’, use ‘object??’ for extra details.</td>
+      </tr>
+      </tbody>
+      </table>
+      <br />
+
+      <h3>ipython usage</h3>
+      <p class="h3">ipython的環境變數IPYTHONDIR預設為~/.ipython</p>
+      <div class="commands">In : <span class="ftns">import</span> os
+      <br />In : <span class="ftns">print</span> os.path
+      <br />In : <span class="ftns">import</span> sys
+      <br />In : <span class="ftns">print</span> sys.path
+      <br />In : <span class="ftns">%hist</span>
+      <span class="cmts"># 預設寫入$IPYTHONDIR/history</span>
+      <br />In : <span class="ftns">%save</span> <span class="vars">tmp.py</span> <span class="vars">n</span>[-<span class="vars">m</span>]
+      <span class="cmts"># 將輸入過的指令寫入檔案n,m為行數</span>
+      <br />In : <span class="ftns">%run</span> <span class="vars">tmp.py</span>
+      <span class="cmts"># 執行python script</span>
+      <br />
+
+      <br />In : a = 1
+      <br />In : b = "XYZ"
+      <br />In : <span class="ftns">for</span> l <span class="ftns">in</span> lists:
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="ftns">print</span> l
+      <br />In : <span class="ftns">%macro</span> mymacro <span class="vars">n</span>[-<span class="vars">m</span>]
+      <span class="cmts"># 將輸入過的指令寫成巨集</span>
+      <br />In : lists = [1,2,3,4]
+      <br />In : mymacro
+      <br />
+
+      <br />In : <span class="ftns">%whos</span>
+      <span class="cmts"># 顯示目前變數/巨集</span>
+      <br />
+      
+      <br />In : <span class="ftns">%store</span> a
+      <span class="cmts"># 將變數寫入db, 重啟ipython仍會自動載入, 預設會存放$IPYTHONDIR/db</span>
+      <br />In : <span class="ftns">%store</span> mymacro
+      <span class="cmts"># 將巨集寫入db, 重啟ipython仍會自動載入, 預設會存放$IPYTHONDIR/db</span>
+      <br />In : <span class="ftns">%store</span>
+      <span class="cmts"># 顯示db中變數/巨集</span>
+      <br />In : <span class="ftns">%store</span> -d a
+      <span class="cmts"># 刪除db中變數/巨集</span>
+      <br />In : <span class="ftns">%store</span> -z
+      <span class="cmts"># 刪除db中所有變數/巨集</span>
+      <br />
+      <br />In : <span class="ftns">del</span> a
+      <span class="cmts"># 刪除變數/巨集</span>
+      <br />In : <span class="ftns">%reset</span>
+      <span class="cmts"># 刪除所有變數/巨集</span>
+      <br />
+
+      <br /> In : <span class="ftns">import</span> os
+      <br /> In : os<span class="ftns">?</span>
+      <br /> In : a<span class="ftns">?</span>
+      <br /> In : <span class="ftns">%pdoc</span> os
+      <span class="cmts"># 說明文件</span>
+      <br /> In : <span class="ftns">%psource</span> os
+      <span class="cmts"># 看source code</span>
+      <br /> In : <span class="ftns">%psearch</span> o*
+      <span class="cmts"># 搜尋</span>
+      <br /> 
+      <br /> In : <span class="ftns">%lsmagic</span>
+      <span class="cmts"># 列出magic function</span>
+      <br /> In : <span class="ftns">%quickref</span>
+      <br />
+
+      <br />In : <span class="ftns">%alias</span>
+      <span class="cmts"># IPYTHON/ipythonrc</span>
+      <br />In : <span class="ftns">%unalias</span>
+      </div>
+ 
+
+
+      <!-- http://damontallen.github.io/IPython-quick-ref-sheets/ -->
+      <hr />
+
+<!-- SSH -->
+      <a name="SSH"><h2>SSH</h2>
+      <a name="paramiko"><h3>paramiko</h3>
+      <p class="h3">SSH、SFTP連線已有適合的函式庫paramiko, 在安裝paramiko之前有個相依pycrypto要先安裝</p>
+      <div class="commands">
+      </div>
+      <hr />
+
+<!-- NumSci -->
+      <a name="NumSci"><h2>Num &amp; Sci</h2>
+
+      <a name="NumPy"><h3>NumPy</h3>
+      <p class="h3"></p>
+      <div class="commands">
+      </div>
+      <br />
+
+      <a name="matplotlib"><h3>matplotlib</h3>
+      <p class="h3"></p>
+      <div class="commands">
+      <br />
+      </span>
+      </div>
+      <br />
+
+      <a name="SciPy"><h3>SciPy</h3>
+      <p class="h3"></p>
+      <div class="commands">
+      </div>
+      <br />
+
+      <p class="h3">在一般windows系統上可以安裝Python(x,y)達到整合環境</p>
+      <hr />
+
+<!-- GUI -->
+      <a name="GUI"><h2>GUI</h2>
+
+      <a name="wxPython"><h3>wxPython</h3>
+      <p class="h3">wxPython是GUI API的一種（wxGTK和wxPython一樣，但wxGTK已經包含在wxPython裡面，所以裝wxPython就可以）</p>
+      <div class="commands"><span class="cmts">#安裝wxPython</span>
+      </div>
+      <br />
+
+      <p class="h3">wxPython內附有自己的IDE，如PyCrust.py等。另外還可以裝Boa Constructor（一種類似MVC模式的wxPython IDE）</p>
+      <div class="commands">Linux:~ $ <span class="cmds">alias</span> PyWrap="python /usr/lib/python2.6/site-packages/wx-2.8-gtk2-unicode/wx/py/PyWrap.py"
+      <br />Linux:~ $ <span class="cmds">PyWrap</span> xx.py
+      <span class="cmts">#使用PyCrust作debuger</span>
+      <br />
+
+      <br />Linux:~ $ <span class="cmds">alias</span> PyCrust='python /usr/lib/python2.6/site-packages/wx-2.8-gtk2-unicode/wx/py/PyCrust.py
+      <br />Linux:~ $ <span class="cmds">PyCrut</span>
+      <span class="cmts">#顯示如下</span>
+      </div>
+      <p class="h3"><img src="PyCrust.png"></p>
+      <hr />
+
+<!-- Package Management -->
+      <a name="Package"><h2>Package Management</h2>
+      <p class="h3"></p>
+      <table class="h3">
+        <tr>
+          <th></th>
+          <th>distutils</th>
+          <th>setuptool</th>
+          <th>pip</th>
+        </tr>
+        <tr>
+          <td>Install</td>
+
+          <td>python setup.py build
+          <br />python setup.pu install [--prefix=<span class="vars">/path</span>] [--record=<span class="vars">logfile</span>]
+          </td>
+          
+          <td>easy_install <span class="vars">pkg.egg</span>
+          <br />easy_install <span class="vars">pkg</span>[==<span class="vars">ver</span>]<sup>*</sup>
+          </td>
+          
+          <td>pip install <span class="vars">pkg.zip</span>
+          <br />pip install [--install-option=&quot;--prefix=<span class="vars">/path</span>&quot;] <span class="vars">pkg</span>[==<span class="vars">ver</span>]<sup>*</sup> 
+          </td>
+        </tr>
+        <tr>
+          <td>remove</td>
+          <td>cat <span class="vars">logfile</span> | xargs rm -rf</td>
+          <td>easy_install -m <span class="vars">pkg</span></td>
+          <td>pip uninstall <span class="vars">pkg</span></td>
+        </tr>
+        <tr>
+          <td>help</td>
+          <td>python setup.py [<span class="vars">command</span>] --help</td>
+          <td>easy_intell --help</td>
+          <td>pip help</td>
+        </tr>
+        <tr>
+          <td>list</td>
+          <td></td>
+          <td>yolk -l</td>
+          <td>pip freeze</td>
+        </tr>
+        <tr>
+          <td>search</td>
+          <td></td>
+          <td></td>
+          <td>pip search <span class="vars">pkg</span></td>
+        </tr>
+      </table>
+      <p class="h3">*: <em>==</em>可以改用<em>&gt;=</em>、<em>&lt;=</em>、<em>&gt;</em>、<em>&lt;</em></p>
+      <br />
+
+      <div class="commands">Linux:~ # <span class="cmds">cat</span> <span class="vars">requirement.txt</span>
+      <br />Django==1.6
+      <br />selenium==2.39
+      <br />Linux:~ # <span class="cmds">pip</span> install -r <span class="vars">requirement.txt</span>
+      </div>
+      <hr />
+
+<!-- Testing tool -->
+      <a name="Testing"></a><h2>Testing tool</h2>
+
+      <a name="selenium"></a><h3>Selenium</h3>
+      <p class="h3">網站撰寫完成或是部署到伺服器上之後, 通常習慣使用人工的方式進行網站測試, 但使用人工測試不但花費大量的時間, 而且有時候會不小心忽略掉某些情境. 而 Selenium 是一套使用真實的瀏覽器進行自動化測試的工具, 它可模擬人為的動作進行網頁的操作, 可 Firefox 中輕易地建立測試案例 (Test Case), 測試案例中一條一條的指令將會像自動機器人一樣確實地執行, 並且記錄一切測試的過程與錯誤. 然後測試案例可以用多種程式語言 (Java、PHP、Ruby) 模擬不同的瀏覽器 (Firefox, IE, Safari, Chrome) 在不同的作業系統下 (Windows, OS X, Linux) 的運作情況, 並將Selenium的功能測試整合到專案中, 成為完整的整合測試.
+      <br /><img src="http://lh3.ggpht.com/-7RIf_3GqfZc/ThFzyPPBImI/AAAAAAAAIbA/9W37awyuypk/s1600-h/howitworkschi23.png" alt="" />
+      </p>
+      <div class="commands"><span class="cmts"># 使用 pip 安裝 selenium</span>
+      <br />Linux:~ # <span class="cmds">pip</span> install selenium
+      <br />Linux:~ # <span class="cmds">pip</span> install xpath
+      <span class="cmts"># 建議安裝 xpath, 之後可使用 xpath 語法</span>
+      </div>
+      <br />
+      <p class="h3">selenium 的預設的 WebDriver 只支援 Firefox, 若要使用其他瀏覽器, 需要另安裝該瀏覽器 WebDriver, 在此以 Google Chrome 為例.
+      <br />先到 <a href="http://chromedriver.storage.googleapis.com/index.html">http://chromedriver.storage.googleapis.com/index.html</a> 下載對應 OS 的 WebDriver, 將WebDriver安裝在 $PATH 或 %PATH% 路徑下即可.
+      </p>
+      <br />
+
+      <div class="commands">Linux:~ # <span class="cmds">cat</span> <span class="vars">ex.py</span>
+      <br />from selenium import webdriver
+      <br />from selenium.webdriver.common.keys import Keys
+      <br />
+      <br />def main():
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;# browser  = webdriver.Firefox()
+      <span class="cmts"># 使用 Firefox WebDriver</span>
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;browser = webdriver.Chrome()
+      <span class="cmts"># 使用 Chrome WebDriver</span>
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;browser.get("http://www.google.com")
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;browser.implicitly_wait(30)
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;element = browser.find_element_by_id('lst-ib')
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;element.send_keys('python')
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;browser.implicitly_wait(30)
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;element.submit()
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;browser.close()
+      <br />
+      <br />if __name__ == "__main__":
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;main()
+      <br />
+
+      <br />Linux:~ # <span class="cmds">cat</span> <span class="vars">exut.py</span>
+      <br />import unittest
+      <span class="cmts"># 套用 unit test</span>
+      <br />from selenium import webdriver
+      <br />from selenium.webdriver.common.keys import Keys
+      <br />
+      <br />class WebpageTest(unittest.TestCase):
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;def setUp(self):
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Method called to prepare the test fixture.
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# self.browser  = webdriver.Firefox()
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.browser = webdriver.Chrome()
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.browser.get("http://www.google.com")
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.assertEqual('Google', self.browser.title)
+      <br />
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;def test_selector(self):
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;element = self.browser.find_element_by_id('lst-ib')
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;element.send_keys('python')
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;element.submit()
+      <br />
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;def tearDown(self):
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# Method called immediately after the test method has been called and the result recorded.
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.browser.close()
+      <br />
+      <br />if __name__ == "__main__":
+      <br />&nbsp;&nbsp;&nbsp;&nbsp;unittest.main()
+      </div>
+      <br />
+
+      <a name="virtualenv"></a><h3>virtualenv</h3>
+      <div class="commands">Linux:~ # <span class="cmds">pip</span> install virtualenv
+      <span class="cmts"># 安裝 virtualenv</span>
+      <br />Linux:~ # <span class="cmds">virtualenv</span>  --no-site-package <span class="vars">myprojec</span>
+      <span class="cmts"># 建立新的虛擬環境</span>
+      <br />Linux:~ # <span class="cmds">source</span> <span class="vars">myproject</span>/bin/active
+      <span class="cmts"># 載入虛擬環境</span>
+      </div>
+      <hr />
+
+<!-- reference -->
+     <a name="Reference"><h2>Reference</h2>
+     <li class="reference"><a href="http://ipython.org/">Announcements — IPython</a></li>
+     <br /><li class="reference"><a href="http://wxpython.org/">wxPython</a></li>
+     <br /><li class="reference"><a href="http://en.wikipedia.org/wiki/List_of_GUI_testing_tools">List of GUI testing tools</a></li>
+     <br /><li class="reference"><a href="http://docs.seleniumhq.org/">Selenium - Web Browser Automation</a></li>
+     <br /><li class="reference"><a href="http://selenium-python.readthedocs.org/en/latest/index.html">Selenium with Python</a></li>
+     <br /><li class="reference"><a href="http://www.virtualenv.org/en/latest/">virtualenv</a></li>
